@@ -4,6 +4,7 @@ from langchain.vectorstores import FAISS
 import replicate
 
 from fastapi import FastAPI, Query
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -61,13 +62,19 @@ def qa_pipeline(prompt):
    
     return suggestions
 
+class TextPromptRequest(BaseModel):
+    prompt: str
+
+class GeneratedTextResponse(BaseModel):
+    generated_text: str
+
 @app.post("/generate_text/")
-def generate_text(prompt: str = Query("", title="Text Prompt", description="Enter the text prompt.")):
+def generate_text(text_prompt: TextPromptRequest):
     
     # Get the outputs from the LLM
-    llm_output = qa_pipeline(prompt)
+    llm_output = qa_pipeline(text_prompt.prompt)
     
-    return {"generated_text": llm_output}
+    return GeneratedTextResponse(generated_text=llm_output)
 
 @app.get("/")
 def default():
