@@ -1,9 +1,5 @@
-from langchain import PromptTemplate, HuggingFacePipeline
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
-
-from torch import bfloat16
-from langchain.llms import CTransformers
 
 import replicate
 
@@ -72,6 +68,10 @@ def generate_text(prompt: str = Query("", title="Text Prompt", description="Ente
     llm_output = qa_pipeline(prompt)
     
     return {"generated_text": llm_output}
+
+@app.get("/")
+def default():
+    return "Welcome to LawChat"
 
 if __name__ == '__main__':
     print(qa_pipeline())
