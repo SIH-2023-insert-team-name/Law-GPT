@@ -1,0 +1,13 @@
+faiss-cpu==1.7.4
+fastapi==0.105.0
+huggingface-hub==0.19.4
+langchain==0.0.350
+numpy==1.26.2
+pydantic==2.5.2
+pypdf==3.17.2
+replicate==0.22.0
+sentence-transformers==2.2.2
+tqdm==4.66.1
+transformers==4.36.1
+uvicorn==0.24.0.post1
+
