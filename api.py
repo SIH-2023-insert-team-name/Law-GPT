@@ -3,8 +3,10 @@ from langchain.vectorstores import FAISS
 
 import replicate
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 
@@ -13,7 +15,8 @@ def get_prompt_template(context, question):
     custom_prompt_template = f"""[INST] <<SYS>>
     You are a trained bot to guide people about Indian Law. You will answer user's query with your knowledge and the context provided. 
     If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
-    Do not say thank you and tell you are an AI Assistant and be open about everything.
+    Do not say thank you and tell you are an AI Assistant and be open about everything. 
+    
     <</SYS>>
     Use the following pieces of context to answer the users question.
     Context : {context}
@@ -57,20 +60,29 @@ def qa_pipeline(prompt):
         },
     )
 
-    llama_response = replicate.run(
-        "meta/llama-2-70b-chat",
-        input={
-            "prompt": custom_prompt_template,
-            "temperature": 0.75,
-            "max_new_tokens": 2048,
-        }
-    )
+    # llama_response = replicate.run(
+    #     "meta/llama-2-70b-chat",
+    #     input={
+    #         "prompt": custom_prompt_template,
+    #         "temperature": 0.75,
+    #         "max_new_tokens": 2048,
+    #     }
+    # )
 
     # Concatenate the response into a single string.
     output_mistral = "".join([str(s) for s in mistral_response])
-    output_llama = "".join([str(s) for s in llama_response])
+    # output_llama = "".join([str(s) for s in llama_response])
    
     return output_mistral
+
+# Enable CORS for all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class TextPromptRequest(BaseModel):
     prompt: str
