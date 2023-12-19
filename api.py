@@ -13,6 +13,14 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 os.environ['REPLICATE_API_TOKEN'] = 'r8_QosdtPbmv7NYBZZJknjFYB7bxHdQUID0MRvqI'
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Custom prompt template
 def get_prompt_template(context, question):
     custom_prompt_template = f"""[INST] <<SYS>>
