@@ -1,3 +1,4 @@
+import os
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 
@@ -9,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+os.environ['REPLICATE_API_TOKEN'] = 'r8_QosdtPbmv7NYBZZJknjFYB7bxHdQUID0MRvqI'
 
 app.add_middleware(
     CORSMiddleware,
@@ -68,18 +70,18 @@ def qa_pipeline(prompt):
         },
     )
 
-    llama_response = replicate.run(
-        "meta/llama-2-70b-chat",
-        input={
-            "prompt": custom_prompt_template,
-            "temperature": 0.75,
-            "max_new_tokens": 2048,
-        }
-    )
+    # llama_response = replicate.run(
+    #     "meta/llama-2-70b-chat",
+    #     input={
+    #         "prompt": custom_prompt_template,
+    #         "temperature": 0.75,
+    #         "max_new_tokens": 2048,
+    #     }
+    # )
 
     # Concatenate the response into a single string.
     output_mistral = "".join([str(s) for s in mistral_response])
-    output_llama = "".join([str(s) for s in llama_response])
+    # output_llama = "".join([str(s) for s in llama_response])
    
     return output_mistral
 
