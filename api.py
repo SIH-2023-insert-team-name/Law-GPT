@@ -57,10 +57,20 @@ def qa_pipeline(prompt):
         },
     )
 
+    llama_response = replicate.run(
+        "meta/llama-2-70b-chat",
+        input={
+            "prompt": custom_prompt_template,
+            "temperature": 0.75,
+            "max_new_tokens": 2048,
+        }
+    )
+
     # Concatenate the response into a single string.
-    suggestions = "".join([str(s) for s in mistral_response])
+    output_mistral = "".join([str(s) for s in mistral_response])
+    output_llama = "".join([str(s) for s in llama_response])
    
-    return suggestions
+    return output_mistral
 
 class TextPromptRequest(BaseModel):
     prompt: str
